@@ -2,12 +2,18 @@ package Project.Dalmoa.application;
 
 import Project.Dalmoa.domain.member.Member;
 import Project.Dalmoa.domain.member.MemberRepository;
+import Project.Dalmoa.domain.subscribe.SubType;
 import Project.Dalmoa.domain.subscribe.Subscribe;
 import Project.Dalmoa.domain.subscribe.SubscribeRepository;
+import Project.Dalmoa.presentation.dto.calculation.DashboardResponse;
 import Project.Dalmoa.presentation.dto.subscribe.SubscribeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubscribeService {
     private final SubscribeRepository subscribeRepository;
     private final MemberRepository memberRepository;
+
+    private final CalculationService calculationService;
 
     public Subscribe createSubscribe(SubscribeRequest dto, Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -55,5 +63,18 @@ public class SubscribeService {
         }
 
         subscribeRepository.delete(subscribe);
+    }
+
+    public DashboardResponse getDashboard(Long memberId) {
+        List<Subscribe> subscribes = subscribeRepository.findAllByMemberId(memberId);
+
+        if (subscribes.isEmpty()) {
+            return new DashboardResponse(0.0, Collections.emptyMap(), Collections.emptyList());
+        }
+
+        double total = calculationService.totalAmount(subscribes);
+        Map<SubType, Double> categorySums = calculationService.calculateGroupedAmount(subscribes);
+
+        return DashboardResponse.of(total, categorySums, subscribes);
     }
 }
