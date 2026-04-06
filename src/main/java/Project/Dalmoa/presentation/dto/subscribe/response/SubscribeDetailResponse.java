@@ -1,4 +1,4 @@
-package Project.Dalmoa.presentation.dto.subscribe;
+package Project.Dalmoa.presentation.dto.subscribe.response;
 
 import Project.Dalmoa.domain.subscribe.Currency;
 import Project.Dalmoa.domain.subscribe.SubType;

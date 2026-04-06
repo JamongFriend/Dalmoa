@@ -11,5 +11,5 @@ public interface SubscribeJpaRepository extends JpaRepository<Subscribe, Long> {
 
     Optional<Subscribe> findById(Long subscribeId);
 
-    List<Subscribe> findByMemberId(Long memberId);
+    List<Subscribe> findAllByMemberId(Long memberId);
 }
