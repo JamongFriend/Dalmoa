@@ -1,5 +1,6 @@
 package Project.Dalmoa.domain.subscribe;
 
+import Project.Dalmoa.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,28 +19,48 @@ public class Subscribe {
 
     private String name;
 
-    private String money;
+    private Double price;
+
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 
     private LocalDateTime date;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private SubType subType;
 
+    private String customTypeTag;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @Builder
-    private Subscribe(Long id, String name, String money, LocalDateTime date, SubType subType) {
+    private Subscribe(Long id, Member member, String name, Double price, LocalDateTime date, SubType subType, String customTypeTag) {
         this.id = id;
+        this.member = member;
         this.name = name;
-        this.money = money;
+        this.price = price;
         this.date = date;
         this.subType = subType;
+        this.customTypeTag = (subType == SubType.ETC) ? customTypeTag : null;
     }
-
-    public static Subscribe createSubscribe(String name, String money, LocalDateTime date, SubType subType) {
+    public static Subscribe createSubscribe(Member member, String name, Double price, LocalDateTime date, SubType subType, String customTypeTag) {
         return Subscribe.builder()
+                .member(member)
                 .name(name)
-                .money(money)
+                .price(price)
                 .date(date)
                 .subType(subType)
+                .customTypeTag(customTypeTag)
                 .build();
+    }
+
+    public void editSubscribe(String name, Double price, LocalDateTime date, SubType subType, String customTypeTag) {
+        this.name = name;
+        this.price = price;
+        this.date = date;
+        this.subType = subType;
+        this.customTypeTag = (subType == SubType.ETC) ? customTypeTag : null;
     }
 }
