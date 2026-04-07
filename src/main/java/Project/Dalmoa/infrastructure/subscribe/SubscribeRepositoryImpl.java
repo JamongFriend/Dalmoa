@@ -31,4 +31,9 @@ public class SubscribeRepositoryImpl implements SubscribeRepository {
     public List<Subscribe> findAllByMemberId(Long memberId) {
         return subscribeJpaRepository.findAllByMemberId(memberId);
     }
+
+    @Override
+    public List<Subscribe> findByPaymentDay(int paymentDay) {
+        return subscribeJpaRepository.findByPaymentDay(paymentDay);
+    }
 }

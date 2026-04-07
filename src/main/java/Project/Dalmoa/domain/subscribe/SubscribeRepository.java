@@ -15,4 +15,6 @@ public interface SubscribeRepository {
     void delete(Subscribe subscribe);
 
     List<Subscribe> findAllByMemberId(Long memberId);
+
+    List<Subscribe> findByPaymentDay(int paymentDay);
 }
