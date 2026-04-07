@@ -5,6 +5,7 @@ import Project.Dalmoa.domain.auth.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -13,8 +14,8 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     private final RefreshTokenJpaRepository refreshTokenJpaRepository;
 
     @Override
-    public Optional<RefreshToken> findValidByMemberId(Long memberId) {
-        return refreshTokenJpaRepository.findValidByMemberId(memberId);
+    public Optional<RefreshToken> findValidToken(Long memberId, LocalDateTime now) {
+        return refreshTokenJpaRepository.findValidToken(memberId, now);
     }
 
     @Override

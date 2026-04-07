@@ -3,6 +3,7 @@ package Project.Dalmoa.domain.auth;
 import Project.Dalmoa.config.JwtProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -10,6 +11,7 @@ import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtTokenProvider {
     private final Key key;
@@ -18,14 +20,18 @@ public class JwtTokenProvider {
     private final String issuer;
 
     public JwtTokenProvider (JwtProperties properties){
-        this.key = Keys.hmacShaKeyFor(properties.secret().getBytes(StandardCharsets.UTF_8));
+        byte[] keyBytes = properties.secret().getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < 32) {
+            log.warn("JWT secret key is too short. It should be at least 256 bits (32 bytes).");
+        }
+        this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessExpMillis = Duration.ofMinutes(properties.accessTokenExpMinutes()).toMillis();
         this.refreshExpMillis = Duration.ofDays(properties.refreshTokenExpDays()).toMillis();
         this.issuer = properties.issuer();
     }
 
     public String createAccessToken(Long memberId, String email) {
-        return  createToken(memberId, email, accessExpMillis);
+        return createToken(memberId, email, accessExpMillis);
     }
 
     public String createRefreshToken(Long memberId, String email) {
@@ -56,9 +62,18 @@ public class JwtTokenProvider {
         try {
             parseClaims(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT token.");
+        } catch (UnsupportedJwtException e) {
+            log.info("Unsupported JWT token.");
+        } catch (MalformedJwtException e) {
+            log.info("Invalid JWT token.");
+        } catch (SignatureException e) {
+            log.info("Invalid JWT signature.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT token compact of handler are invalid.");
         }
+        return false;
     }
 
     public Long getMemberId(String token) {

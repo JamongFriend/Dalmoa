@@ -23,7 +23,7 @@ public class RefreshToken {
     private Long memberId;
 
     @Column(nullable = false)
-    private LocalDateTime expirseAt;
+    private LocalDateTime expiresAt;
 
     @Column(nullable = false)
     private boolean revoked;
@@ -32,13 +32,13 @@ public class RefreshToken {
     public RefreshToken(Long memberId, String refreshTokenHash, LocalDateTime expiresAt) {
         this.memberId = memberId;
         this.refreshTokenHash = refreshTokenHash;
-        this.expirseAt = expiresAt;
+        this.expiresAt = expiresAt;
         this.revoked = false;
     }
 
     public void updateToken(String newHash, LocalDateTime expiresAt) {
         this.refreshTokenHash = newHash;
-        this.expirseAt = expiresAt;
+        this.expiresAt = expiresAt;
         this.revoked = false;
     }
 

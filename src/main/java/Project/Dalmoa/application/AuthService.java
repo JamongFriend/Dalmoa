@@ -57,7 +57,7 @@ public class AuthService {
         Long memberId = jwtTokenProvider.getMemberId(request.refreshToken());
         String email = jwtTokenProvider.getEmail(request.refreshToken());
 
-        RefreshToken saved = refreshTokenRepository.findValidByMemberId(memberId)
+        RefreshToken saved = refreshTokenRepository.findValidToken(memberId, LocalDateTime.now())
                 .orElseThrow(() -> new IllegalArgumentException("저장된 RefreshToken이 없거나 만료되었습니다."));
 
         if (!request.refreshToken().equals(saved.getRefreshTokenHash())) {
