@@ -2,7 +2,7 @@ package Project.Dalmoa.application;
 
 import Project.Dalmoa.domain.member.Member;
 import Project.Dalmoa.domain.member.MemberRepository;
-import Project.Dalmoa.domain.subscribe.SubType;
+import Project.Dalmoa.domain.subscribe.SubCategory;
 import Project.Dalmoa.domain.subscribe.Subscribe;
 import Project.Dalmoa.domain.subscribe.SubscribeRepository;
 import Project.Dalmoa.presentation.dto.subscribe.response.DashboardResponse;
@@ -33,9 +33,10 @@ public class SubscribeService {
                 member,
                 dto.name(),
                 dto.price(),
+                dto.currency(),
                 dto.date().atStartOfDay(),
-                dto.type(),
-                dto.customTypeTag()
+                dto.subCategory(),
+                dto.customCategoryTag()
         );
         return subscribeRepository.save(subscribe);
     }
@@ -48,9 +49,10 @@ public class SubscribeService {
         subscribe.editSubscribe(
                 dto.name(),
                 dto.price(),
+                dto.currency(),
                 dto.date().atStartOfDay(),
-                dto.type(),
-                dto.customTypeTag()
+                dto.subCategory(),
+                dto.customCategoryTag()
         );
 
         return subscribe;
@@ -77,7 +79,7 @@ public class SubscribeService {
     public DashboardResponse getDashboard(Long memberId) {
         List<Subscribe> subscribes = subscribeRepository.findAllByMemberId(memberId);
         double total = calculationService.totalAmount(subscribes);
-        Map<SubType, Double> categorySums = calculationService.calculateGroupedAmount(subscribes);
+        Map<SubCategory, Double> categorySums = calculationService.calculateGroupedAmount(subscribes);
 
         return new DashboardResponse(total, categorySums);
     }

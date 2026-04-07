@@ -1,7 +1,7 @@
 package Project.Dalmoa.presentation.dto.subscribe.response;
 
 import Project.Dalmoa.domain.subscribe.Currency;
-import Project.Dalmoa.domain.subscribe.SubType;
+import Project.Dalmoa.domain.subscribe.SubCategory;
 import Project.Dalmoa.domain.subscribe.Subscribe;
 
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ public record SubscribeDetailResponse(
         String name,
         Double price,
         Currency currency,
-        SubType type,
+        SubCategory category,
         String customTag,
         LocalDateTime date
 ) {
@@ -21,8 +21,8 @@ public record SubscribeDetailResponse(
                 s.getName(),
                 s.getPrice(),
                 s.getCurrency(),
-                s.getSubType(),
-                s.getCustomTypeTag(),
+                s.getSubCategory(),
+                s.getCustomCategoryTag(),
                 s.getDate()
         );
     }

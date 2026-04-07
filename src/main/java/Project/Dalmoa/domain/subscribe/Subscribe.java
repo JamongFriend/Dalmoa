@@ -27,40 +27,44 @@ public class Subscribe {
     private LocalDateTime date;
 
     @Enumerated(EnumType.STRING)
-    private SubType subType;
+    private SubCategory subCategory;
 
-    private String customTypeTag;
+    private String customCategoryTag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    private Subscribe(Long id, Member member, String name, Double price, LocalDateTime date, SubType subType, String customTypeTag) {
+    private Subscribe(Long id, Member member, String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customCategoryTag) {
         this.id = id;
         this.member = member;
         this.name = name;
         this.price = price;
+        this.currency = (currency == null) ? Currency.KRW : currency;
         this.date = date;
-        this.subType = subType;
-        this.customTypeTag = (subType == SubType.ETC) ? customTypeTag : null;
+        this.subCategory = subCategory;
+        this.customCategoryTag = (subCategory == SubCategory.ETC) ? customCategoryTag : null;
     }
-    public static Subscribe createSubscribe(Member member, String name, Double price, LocalDateTime date, SubType subType, String customTypeTag) {
+
+    public static Subscribe createSubscribe(Member member, String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customTypeTag) {
         return Subscribe.builder()
                 .member(member)
                 .name(name)
                 .price(price)
+                .currency(currency)
                 .date(date)
-                .subType(subType)
-                .customTypeTag(customTypeTag)
+                .subCategory(subCategory)
+                .customCategoryTag(customTypeTag)
                 .build();
     }
 
-    public void editSubscribe(String name, Double price, LocalDateTime date, SubType subType, String customTypeTag) {
+    public void editSubscribe(String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customTypeTag) {
         this.name = name;
         this.price = price;
+        this.currency = (currency == null) ? Currency.KRW : currency;
         this.date = date;
-        this.subType = subType;
-        this.customTypeTag = (subType == SubType.ETC) ? customTypeTag : null;
+        this.subCategory = subCategory;
+        this.customCategoryTag = (subCategory == SubCategory.ETC) ? customTypeTag : null;
     }
 }

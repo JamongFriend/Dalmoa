@@ -1,7 +1,7 @@
 package Project.Dalmoa.application;
 
 import Project.Dalmoa.domain.subscribe.Currency;
-import Project.Dalmoa.domain.subscribe.SubType;
+import Project.Dalmoa.domain.subscribe.SubCategory;
 import Project.Dalmoa.domain.subscribe.Subscribe;
 import Project.Dalmoa.presentation.dto.calculation.ExchangeRateResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +36,10 @@ public class CalculationService {
                 .sum();
     }
 
-    public Map<SubType, Double> calculateGroupedAmount(List<Subscribe> list) {
+    public Map<SubCategory, Double> calculateGroupedAmount(List<Subscribe> list) {
         return list.stream()
                 .collect(Collectors.groupingBy(
-                        Subscribe::getSubType,
+                        Subscribe::getSubCategory,
                         Collectors.summingDouble(this::convertToKrw)
                 ));
     }
