@@ -1,29 +1,43 @@
 # Dalmoa
 
-구독 및 적금 같은 매달 고정적으로 나가는 금액을 정리해 주는 모바일 플렛폼
+**구독 관리 서비스 '달모아'의 API 서버입니다.**
 
----
-## 🧩 주요 기능
-
-### 1. 구독 목록 관리
-* **구독 CRUD** : 이름, 카테고리, 날짜, 금액 입력 및 생성, 확인, 수정, 삭제
-* **금액 계산** : 매 달 지출 금액, 카테고리별 금액, 환율 계산
-
-### 2. 지출일 알림
-* **알림 기능** : 지출일 3일 전과 하루 전 알림
-
-### 3. 구글 로그인, 카카오 로그인 연동
-* 구글, 카카오 연동한 계정들을 모아서 어디서 언제 얼마나 지출하는지 확인
-
+사용자의 구독 정보를 관리하고, 환율 API를 연동하여 실시간 지출 계산 기능을 제공합니다
 
 ---
 
-## 🛠 기술 스택
-
-- **Language**: Java 21
-- **Framework**: Spring Boot 4.0.0
-- **Database**: MySQL 8.0, Spring Data JPA
-- **Security**: Spring Security, JWT (Json Web Token)
-- **Build**: Gradle
+## 🔗 관련 저장소
+**Android App**: [Dalmoa_Android 저장소 링크](https://github.com/...)
 
 ---
+
+## 🛠 Tech Stack
+*   **Language**: Java 21
+*   **Framework**: Spring Boot 4.0.5
+*   **Security**: Spring Security, JWT (Json Web Token)
+*   **Database**: H2 (Development), JPA/Hibernate
+*   **Build Tool**: Gradle
+
+---
+
+## ✨ Key Features
+*   **Authentication**: JWT 기반 로그인 및 Refresh Token 관리
+*   **Subscription Management**: 구독 서비스 등록, 수정, 삭제 및 목록 조회
+*   **Calculation Engine**: 환율 API를 활용한 원화 환산 및 대시보드 통계 계산
+*   **Notification**: 구독 결제일 관련 알림 로직 (Scheduler 활용)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+*   JDK 21
+*   Gradle 8.x 이상
+
+### Environment Variables
+이 프로젝트는 외부 환율 API 연동을 위해 API Key가 필요합니다. `application.properties`를 수정하거나 환경 변수를
+설정하세요.
+* `EXCHANGE_API_KEY`: [ExchangeRate-API](https://www.exchangerate-api.com/)에서 발급받은 키
+ 
+### Run
+  ./gradlew bootRun
