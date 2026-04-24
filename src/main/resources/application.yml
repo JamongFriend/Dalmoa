@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Dalmoa
+    
+jwt:
+  secret: ${JWT_SECRET:your-very-secure-and-long-default-secret-key-32chars-minimum}
+  issuer: dalmoa-backend
+  access-token-exp-minutes: 30
+  refresh-token-exp-days: 30
+
+exchange:
+  api:
+    key: ${EXCHANGE_API_KEY:YOUR_API_KEY}
+    base-url: https://v6.exchangerate-api.com/v6/
