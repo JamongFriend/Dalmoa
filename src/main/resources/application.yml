@@ -2,6 +2,21 @@ spring:
   application:
     name: Dalmoa
     
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dalmoa?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: dalmoa
+    password: 83492761
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
 jwt:
   secret: ${JWT_SECRET:your-very-secure-and-long-default-secret-key-32chars-minimum}
   issuer: dalmoa-backend
