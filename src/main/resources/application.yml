@@ -18,12 +18,12 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 
 jwt:
-  secret: ${JWT_SECRET:your-very-secure-and-long-default-secret-key-32chars-minimum}
+  secret: ${JWT_SECRET:***REMOVED***}
   issuer: dalmoa-backend
   access-token-exp-minutes: 30
   refresh-token-exp-days: 30
 
 exchange:
   api:
-    key: ${EXCHANGE_API_KEY:YOUR_API_KEY}
+    key: ${EXCHANGE_API_KEY:***REMOVED***}
     base-url: https://v6.exchangerate-api.com/v6/
