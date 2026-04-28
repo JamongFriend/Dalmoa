@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL:jdbc:mysql://localhost:3306/dalmoa?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
     username: ${DB_USERNAME:dalmoa}
-    password: ${DB_PASSWORD:83492761}
+    password: ${DB_PASSWORD:klgh83492761!}
 
   jpa:
     hibernate:
@@ -18,12 +18,12 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 
 jwt:
-  secret: ${JWT_SECRET:your-very-secure-and-long-default-secret-key-32chars-minimum}
+  secret: ${JWT_SECRET:Dalmoa_Secure_Random_Jwt_Secret_Key_Minimum_32_Characters_Required_1234567890}
   issuer: dalmoa-backend
   access-token-exp-minutes: 30
   refresh-token-exp-days: 30
 
 exchange:
   api:
-    key: ${EXCHANGE_API_KEY:YOUR_API_KEY}
+    key: ${EXCHANGE_API_KEY:f66ed6be838bafc18ab66d67}
     base-url: https://v6.exchangerate-api.com/v6/
