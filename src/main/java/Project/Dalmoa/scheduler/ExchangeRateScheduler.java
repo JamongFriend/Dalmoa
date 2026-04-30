@@ -1,5 +1,6 @@
-package Project.Dalmoa.application;
+package Project.Dalmoa.scheduler;
 
+import Project.Dalmoa.application.ExchangeRateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

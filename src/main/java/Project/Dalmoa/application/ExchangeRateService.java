@@ -1,6 +1,6 @@
 package Project.Dalmoa.application;
 
-import Project.Dalmoa.application.dto.ExchangeRateResponse;
+import Project.Dalmoa.presentation.dto.exchange_rate.ExchangeRateResponse;
 import Project.Dalmoa.domain.exchange.ExchangeRate;
 import Project.Dalmoa.domain.exchange.ExchangeRateRepository;
 import lombok.RequiredArgsConstructor;
