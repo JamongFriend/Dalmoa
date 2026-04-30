@@ -1,4 +1,4 @@
-package Project.Dalmoa.application.dto;
+package Project.Dalmoa.presentation.dto.exchange_rate;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
