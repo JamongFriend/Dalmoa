@@ -1,0 +1,449 @@
+<mxfile host="app.diagrams.net" version="21.0.0" type="device">
+
+  <diagram id="page1" name="1. 시스템 구성도">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="p1-0"/>
+        <mxCell id="p1-1" parent="p1-0"/>
+
+        <!-- Android Group -->
+        <mxCell id="p1-ag" value="📱 Android App" style="swimlane;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="p1-1">
+          <mxGeometry x="30" y="30" width="290" height="460" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-frag" value="Fragment (View)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-ag">
+          <mxGeometry x="65" y="55" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-vm" value="ViewModel + UiState" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-ag">
+          <mxGeometry x="65" y="115" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-repo" value="Repository" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-ag">
+          <mxGeometry x="65" y="175" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-intercept" value="AuthInterceptor&#xa;(헤더 자동 주입)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;" vertex="1" parent="p1-ag">
+          <mxGeometry x="20" y="245" width="145" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-authenticator" value="TokenAuthenticator&#xa;(자동 재발급)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;" vertex="1" parent="p1-ag">
+          <mxGeometry x="20" y="315" width="145" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-tmgr" value="TokenManager&#xa;(SharedPrefs)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-ag">
+          <mxGeometry x="175" y="315" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-ea1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-frag" target="p1-vm" parent="p1-ag"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p1-ea2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-vm" target="p1-repo" parent="p1-ag"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p1-ea3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-repo" target="p1-intercept" parent="p1-ag"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p1-ea4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-intercept" target="p1-authenticator" parent="p1-ag"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p1-ea5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-authenticator" target="p1-tmgr" parent="p1-ag"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Backend Group -->
+        <mxCell id="p1-bg" value="⚙️ Spring Boot Backend  (dalmoa.duckdns.org)" style="swimlane;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;" vertex="1" parent="p1-1">
+          <mxGeometry x="370" y="30" width="650" height="660" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-rl" value="RateLimitFilter&#xa;(Bucket4j — IP당 분당 10회 제한)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;" vertex="1" parent="p1-bg">
+          <mxGeometry x="30" y="55" width="250" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-jf" value="JwtAuthFilter&#xa;(토큰 검증 → SecurityContext 주입)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;" vertex="1" parent="p1-bg">
+          <mxGeometry x="30" y="125" width="250" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Controllers subgroup -->
+        <mxCell id="p1-cg" value="Controllers" style="swimlane;startSize=25;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p1-bg">
+          <mxGeometry x="30" y="200" width="265" height="310" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-c1" value="AuthController  /api/auth" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-cg"><mxGeometry x="15" y="35" width="235" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-c2" value="MemberController  /api/member" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-cg"><mxGeometry x="15" y="83" width="235" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-c3" value="SubscribeController  /api/subscribe" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-cg"><mxGeometry x="15" y="131" width="235" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-c4" value="NotificationController  /api/notifications" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-cg"><mxGeometry x="15" y="179" width="235" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-c5" value="ExchangeRateController  /api/exchange-rates" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-cg"><mxGeometry x="15" y="257" width="235" height="38" as="geometry"/></mxCell>
+
+        <!-- Services subgroup -->
+        <mxCell id="p1-sg" value="Services" style="swimlane;startSize=25;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="p1-bg">
+          <mxGeometry x="330" y="200" width="285" height="360" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-s1" value="AuthService" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-sg"><mxGeometry x="15" y="35" width="255" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-s2" value="MemberService" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-sg"><mxGeometry x="15" y="83" width="255" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-s3" value="SubscribeService" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-sg"><mxGeometry x="15" y="131" width="255" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-s4" value="NotificationService" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-sg"><mxGeometry x="15" y="179" width="255" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-s5" value="CalculationService  (@Cacheable 환율 캐싱)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-sg"><mxGeometry x="15" y="227" width="255" height="38" as="geometry"/></mxCell>
+        <mxCell id="p1-s6" value="ExchangeRateService" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-sg"><mxGeometry x="15" y="305" width="255" height="38" as="geometry"/></mxCell>
+
+        <!-- Database -->
+        <mxCell id="p1-db" value="Database" style="shape=mxgraph.flowchart.database;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="p1-bg">
+          <mxGeometry x="275" y="580" width="100" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Scheduler subgroup -->
+        <mxCell id="p1-schg" value="⏰ Scheduler" style="swimlane;startSize=25;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="p1-bg">
+          <mxGeometry x="30" y="530" width="560" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-sch1" value="NotificationScheduler&#xa;매일 오전 09:00" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-schg"><mxGeometry x="20" y="33" width="240" height="45" as="geometry"/></mxCell>
+        <mxCell id="p1-sch2" value="ExchangeRateScheduler&#xa;주기적 환율 갱신" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p1-schg"><mxGeometry x="300" y="33" width="240" height="45" as="geometry"/></mxCell>
+
+        <!-- Backend internal edges -->
+        <mxCell id="p1-eb1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-rl" target="p1-jf" parent="p1-bg"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p1-eb2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-jf" target="p1-cg" parent="p1-bg"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p1-eb3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-cg" target="p1-sg" parent="p1-bg"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p1-eb4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-sg" target="p1-db" parent="p1-bg"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p1-eb5" value="서비스 호출" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p1-schg" target="p1-sg" parent="p1-bg"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- External API (root level) -->
+        <mxCell id="p1-ext" value="🌐 ExchangeRate API&#xa;(외부 환율 서비스)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="p1-1">
+          <mxGeometry x="1090" y="300" width="180" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Cross-group edges -->
+        <mxCell id="p1-ec1" value="HTTPS 요청" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;" edge="1" source="p1-ag" target="p1-bg" parent="p1-1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-ec2" value="환율 조회" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="p1-s5" target="p1-ext" parent="p1-1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="p1-ec3" value="환율 갱신" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="p1-s6" target="p1-ext" parent="p1-1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="page2" name="2. 인증 흐름">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="p2-0"/>
+        <mxCell id="p2-1" parent="p2-0"/>
+
+        <!-- SIGNUP FLOW -->
+        <mxCell id="p2-t1" value="회원가입" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" vertex="1" parent="p2-1">
+          <mxGeometry x="60" y="20" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-su-start" value="Android App" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="95" y="60" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-su-req" value="POST /api/member/signUp" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p2-1">
+          <mxGeometry x="75" y="120" width="170" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-su-hash" value="BCrypt 비밀번호 해싱" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="85" y="180" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-su-save" value="Member DB 저장" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="85" y="240" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-su-res" value="SignUpResponse 반환" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p2-1">
+          <mxGeometry x="85" y="300" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-sue1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-su-start" target="p2-su-req" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-sue2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-su-req" target="p2-su-hash" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-sue3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-su-hash" target="p2-su-save" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-sue4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-su-save" target="p2-su-res" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- LOGIN FLOW -->
+        <mxCell id="p2-t2" value="로그인" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" vertex="1" parent="p2-1">
+          <mxGeometry x="60" y="380" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-lo-start" value="Android App" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="95" y="420" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-lo-req" value="POST /api/auth/login" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p2-1">
+          <mxGeometry x="75" y="480" width="170" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-rl-box" value="RateLimitFilter&#xa;(IP당 분당 10회 확인)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;" vertex="1" parent="p2-1">
+          <mxGeometry x="75" y="540" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-rl-d" value="제한 초과?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="105" y="610" width="110" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-429" value="429 Too Many Requests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="p2-1">
+          <mxGeometry x="255" y="623" width="170" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-lo-email" value="이메일로 회원 조회" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="85" y="690" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-lo-pw" value="BCrypt 비밀번호 검증" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="85" y="750" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-lo-jwt" value="AccessToken + RefreshToken 발급&#xa;rememberMe → 만료일 분기" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p2-1">
+          <mxGeometry x="60" y="810" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-lo-save" value="RefreshToken DB 저장" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="85" y="885" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-lo-store" value="TokenManager에 저장&#xa;(SharedPreferences)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p2-1">
+          <mxGeometry x="75" y="945" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-loe1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-lo-start" target="p2-lo-req" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-loe2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-lo-req" target="p2-rl-box" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-loe3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-rl-box" target="p2-rl-d" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-loe4" value="Yes" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-rl-d" target="p2-429" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-loe5" value="No" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-rl-d" target="p2-lo-email" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-loe6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-lo-email" target="p2-lo-pw" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-loe7" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-lo-pw" target="p2-lo-jwt" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-loe8" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-lo-jwt" target="p2-lo-save" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-loe9" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-lo-save" target="p2-lo-store" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- TOKEN REISSUE FLOW -->
+        <mxCell id="p2-t3" value="토큰 만료 시 자동 재발급" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" vertex="1" parent="p2-1">
+          <mxGeometry x="500" y="20" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-start" value="Android API 요청" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="565" y="60" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-intercept" value="AuthInterceptor&#xa;Bearer {AccessToken} 헤더 추가" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;" vertex="1" parent="p2-1">
+          <mxGeometry x="540" y="120" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-401" value="서버 응답: 401 Unauthorized&#xa;(AccessToken 만료)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="p2-1">
+          <mxGeometry x="540" y="190" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-auth" value="TokenAuthenticator.authenticate()&#xa;synchronized 블록" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;" vertex="1" parent="p2-1">
+          <mxGeometry x="535" y="260" width="210" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-d" value="현재 저장 토큰 ==&#xa;요청에 쓴 토큰?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="560" y="335" width="160" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-skip" value="다른 스레드에서 이미 갱신&#xa;→ 새 토큰으로 재시도" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p2-1">
+          <mxGeometry x="770" y="350" width="190" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-req" value="POST /api/auth/reissue&#xa;(별도 Retrofit — 순환 방지)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p2-1">
+          <mxGeometry x="535" y="435" width="210" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-val" value="RefreshToken 유효성 검증&#xa;+ DB 저장 토큰 일치 확인" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p2-1">
+          <mxGeometry x="535" y="510" width="210" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-new" value="새 AccessToken + RefreshToken 발급&#xa;(토큰 로테이션)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p2-1">
+          <mxGeometry x="535" y="585" width="210" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-store" value="TokenManager에 새 토큰 저장" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p2-1">
+          <mxGeometry x="555" y="660" width="170" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-ri-retry" value="원래 요청 재시도" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p2-1">
+          <mxGeometry x="580" y="720" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-rie1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-start" target="p2-ri-intercept" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-intercept" target="p2-ri-401" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-401" target="p2-ri-auth" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-auth" target="p2-ri-d" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie5" value="다름(이미 갱신)" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-d" target="p2-ri-skip" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie6" value="같음(갱신 필요)" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-d" target="p2-ri-req" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie7" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-req" target="p2-ri-val" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie8" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-val" target="p2-ri-new" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie9" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-new" target="p2-ri-store" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2-rie10" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p2-ri-store" target="p2-ri-retry" parent="p2-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="page3" name="3. 구독 &amp; 대시보드">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="p3-0"/>
+        <mxCell id="p3-1" parent="p3-0"/>
+
+        <!-- SUBSCRIBE CRUD -->
+        <mxCell id="p3-t1" value="구독 관리 (CRUD)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" vertex="1" parent="p3-1">
+          <mxGeometry x="100" y="20" width="260" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-android" value="Android (SubscribeViewModel)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="p3-1">
+          <mxGeometry x="85" y="60" width="230" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p3-add-btn" value="구독 추가" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1"><mxGeometry x="20" y="130" width="100" height="35" as="geometry"/></mxCell>
+        <mxCell id="p3-list-btn" value="목록 조회" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1"><mxGeometry x="135" y="130" width="100" height="35" as="geometry"/></mxCell>
+        <mxCell id="p3-edit-btn" value="수정" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1"><mxGeometry x="250" y="130" width="100" height="35" as="geometry"/></mxCell>
+        <mxCell id="p3-del-btn" value="삭제" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1"><mxGeometry x="365" y="130" width="100" height="35" as="geometry"/></mxCell>
+
+        <mxCell id="p3-add-api" value="POST&#xa;/api/subscribe/{memberId}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p3-1"><mxGeometry x="10" y="190" width="120" height="50" as="geometry"/></mxCell>
+        <mxCell id="p3-list-api" value="GET&#xa;/list/{memberId}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p3-1"><mxGeometry x="140" y="190" width="110" height="50" as="geometry"/></mxCell>
+        <mxCell id="p3-edit-api" value="PUT&#xa;/api/subscribe/{id}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p3-1"><mxGeometry x="260" y="190" width="110" height="50" as="geometry"/></mxCell>
+        <mxCell id="p3-del-api" value="DELETE&#xa;/{subId}/{memberId}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p3-1"><mxGeometry x="380" y="190" width="120" height="50" as="geometry"/></mxCell>
+
+        <mxCell id="p3-rule1" value="currency==null → KRW 기본값" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p3-1"><mxGeometry x="10" y="270" width="200" height="40" as="geometry"/></mxCell>
+        <mxCell id="p3-rule2" value="ETC → customCategoryTag 저장&#xa;그 외 → null" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p3-1"><mxGeometry x="220" y="270" width="170" height="50" as="geometry"/></mxCell>
+        <mxCell id="p3-rule3" value="소유자(memberId) 검증 후 삭제" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="p3-1"><mxGeometry x="400" y="270" width="120" height="50" as="geometry"/></mxCell>
+        <mxCell id="p3-db" value="Database" style="shape=mxgraph.flowchart.database;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1"><mxGeometry x="195" y="350" width="100" height="60" as="geometry"/></mxCell>
+
+        <mxCell id="p3-se1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-android" target="p3-add-btn" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-android" target="p3-list-btn" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-android" target="p3-edit-btn" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-android" target="p3-del-btn" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-add-btn" target="p3-add-api" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-list-btn" target="p3-list-api" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se7" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-edit-btn" target="p3-edit-api" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se8" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-del-btn" target="p3-del-api" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se9" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-add-api" target="p3-rule1" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se10" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-edit-api" target="p3-rule2" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se11" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-del-api" target="p3-rule3" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se12" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-rule1" target="p3-db" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se13" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-rule2" target="p3-db" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-se14" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-rule3" target="p3-db" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- DASHBOARD FLOW -->
+        <mxCell id="p3-t2" value="대시보드 / 통계 흐름" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" vertex="1" parent="p3-1">
+          <mxGeometry x="680" y="20" width="260" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-dash-req" value="GET /api/subscribe/dashboard/{memberId}&#xa;(SubscribeStatsFragment)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p3-1">
+          <mxGeometry x="655" y="60" width="270" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-sub-svc" value="SubscribeService&#xa;회원의 전체 구독 조회" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1">
+          <mxGeometry x="690" y="135" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-calc" value="CalculationService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="p3-1">
+          <mxGeometry x="720" y="210" width="140" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-total" value="totalAmount()&#xa;전체 합산" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1">
+          <mxGeometry x="645" y="280" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-group" value="calculateGroupedAmount()&#xa;카테고리별 합산" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1">
+          <mxGeometry x="790" y="280" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-convert" value="convertToKrw()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1">
+          <mxGeometry x="715" y="360" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-cur-d" value="통화?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1">
+          <mxGeometry x="735" y="420" width="110" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-krw" value="KRW → 그대로" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p3-1">
+          <mxGeometry x="635" y="505" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p3-cache-d" value="@Cacheable&#xa;캐시 확인" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="p3-1">
+          <mxGeometry x="790" y="497" width="120" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-hit" value="캐시 HIT → 즉시 반환" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p3-1">
+          <mxGeometry x="780" y="585" width="140" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-miss" value="ExchangeRate API 호출&#xa;→ 캐시 저장" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p3-1">
+          <mxGeometry x="960" y="497" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-res" value="DashboardResponse&#xa;{ total, categorySums:{OTT,MUSIC,...} }" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p3-1">
+          <mxGeometry x="675" y="665" width="240" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3-pie" value="PieChartView (커스텀 뷰)&#xa;카테고리별 시각화" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p3-1">
+          <mxGeometry x="695" y="745" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p3-de1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-dash-req" target="p3-sub-svc" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-sub-svc" target="p3-calc" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-calc" target="p3-total" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-calc" target="p3-group" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-total" target="p3-convert" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-group" target="p3-convert" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de7" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-convert" target="p3-cur-d" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de8" value="KRW" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-cur-d" target="p3-krw" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de9" value="USD" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-cur-d" target="p3-cache-d" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de10" value="HIT" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-cache-d" target="p3-hit" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de11" value="MISS" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-cache-d" target="p3-miss" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de12" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-krw" target="p3-res" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de13" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-hit" target="p3-res" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de14" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-miss" target="p3-res" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3-de15" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p3-res" target="p3-pie" parent="p3-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="page4" name="4. 알림 &amp; 환율 스케줄러">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="p4-0"/>
+        <mxCell id="p4-1" parent="p4-0"/>
+
+        <!-- NOTIFICATION SCHEDULER -->
+        <mxCell id="p4-t1" value="알림 스케줄러" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" vertex="1" parent="p4-1">
+          <mxGeometry x="50" y="20" width="230" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-cron" value="⏰ 매일 오전 09:00&#xa;Cron: 0 0 9 * * *" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="p4-1">
+          <mxGeometry x="80" y="60" width="180" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-check" value="checkAndSendNotifications()" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p4-1">
+          <mxGeometry x="85" y="135" width="170" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-7d-q" value="오늘+7일 == 결제일인 구독 조회" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p4-1">
+          <mxGeometry x="65" y="200" width="210" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-7d-n" value="알림 저장:&#xa;'일주일 뒤에 [서비스명] 결제 예정'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p4-1">
+          <mxGeometry x="65" y="260" width="210" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-1d-q" value="오늘+1일 == 결제일인 구독 조회" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p4-1">
+          <mxGeometry x="65" y="335" width="210" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-1d-n" value="알림 저장:&#xa;'내일 [서비스명] 결제 예정. 잔액 확인!'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p4-1">
+          <mxGeometry x="65" y="395" width="210" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-sep" value="앱 실행 시 (Android)" style="text;html=1;strokeColor=none;fillColor=none;fontStyle=1;" vertex="1" parent="p4-1">
+          <mxGeometry x="80" y="465" width="180" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-unread" value="GET /api/notifications/unread-exists&#xa;읽지 않은 알림 여부 확인" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p4-1">
+          <mxGeometry x="50" y="500" width="240" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-list" value="GET /api/notifications&#xa;전체 알림 목록 (최신순)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p4-1">
+          <mxGeometry x="50" y="565" width="240" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-read" value="PATCH /api/notifications/{id}/read&#xa;읽음 처리" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p4-1">
+          <mxGeometry x="50" y="630" width="240" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p4-ne1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-cron" target="p4-check" parent="p4-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-ne2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-check" target="p4-7d-q" parent="p4-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-ne3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-7d-q" target="p4-7d-n" parent="p4-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-ne4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-7d-n" target="p4-1d-q" parent="p4-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-ne5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-1d-q" target="p4-1d-n" parent="p4-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- EXCHANGE RATE -->
+        <mxCell id="p4-t2" value="환율 이중 구조" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" vertex="1" parent="p4-1">
+          <mxGeometry x="400" y="20" width="260" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Realtime group -->
+        <mxCell id="p4-rt-g" value="실시간 계산용 (CalculationService)" style="swimlane;startSize=25;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="p4-1">
+          <mxGeometry x="370" y="60" width="300" height="255" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-rt-req" value="대시보드 요청" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p4-rt-g">
+          <mxGeometry x="75" y="40" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-rt-cache" value="@Cacheable 캐시 확인" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="p4-rt-g">
+          <mxGeometry x="75" y="100" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-rt-hit" value="캐시에서 즉시 반환" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p4-rt-g">
+          <mxGeometry x="10" y="195" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-rt-miss" value="API 호출&#xa;→ 캐시 저장" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p4-rt-g">
+          <mxGeometry x="155" y="195" width="120" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-rte1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-rt-req" target="p4-rt-cache" parent="p4-rt-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-rte2" value="HIT" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-rt-cache" target="p4-rt-hit" parent="p4-rt-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-rte3" value="MISS" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-rt-cache" target="p4-rt-miss" parent="p4-rt-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Scheduled group -->
+        <mxCell id="p4-sch-g" value="DB 저장용 (ExchangeRateScheduler)" style="swimlane;startSize=25;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="p4-1">
+          <mxGeometry x="370" y="350" width="300" height="330" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-sch-cron" value="주기 스케줄러 실행" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p4-sch-g">
+          <mxGeometry x="75" y="40" width="150" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-sch-fetch" value="USD 기준 전체 환율 API 조회" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="p4-sch-g">
+          <mxGeometry x="60" y="100" width="180" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-sch-d" value="DB에 존재?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="p4-sch-g">
+          <mxGeometry x="90" y="160" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-sch-upd" value="rate + updatedAt UPDATE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p4-sch-g">
+          <mxGeometry x="10" y="250" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-sch-ins" value="새 ExchangeRate INSERT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="p4-sch-g">
+          <mxGeometry x="160" y="250" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-sch-api" value="GET /api/exchange-rates&#xa;저장된 환율 목록 제공" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="p4-sch-g">
+          <mxGeometry x="65" y="310" width="175" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-sche1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-sch-cron" target="p4-sch-fetch" parent="p4-sch-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-sche2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-sch-fetch" target="p4-sch-d" parent="p4-sch-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-sche3" value="있음" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-sch-d" target="p4-sch-upd" parent="p4-sch-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-sche4" value="없음" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-sch-d" target="p4-sch-ins" parent="p4-sch-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-sche5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-sch-upd" target="p4-sch-api" parent="p4-sch-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-sche6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="p4-sch-ins" target="p4-sch-api" parent="p4-sch-g"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- External API -->
+        <mxCell id="p4-ext" value="🌐 ExchangeRate API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="p4-1">
+          <mxGeometry x="740" y="260" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4-ce1" value="MISS 시 호출" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="p4-rt-miss" target="p4-ext" parent="p4-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4-ce2" value="스케줄 호출" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="p4-sch-fetch" target="p4-ext" parent="p4-1"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+</mxfile>
