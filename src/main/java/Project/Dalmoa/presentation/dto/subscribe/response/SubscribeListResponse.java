@@ -10,14 +10,18 @@ public record SubscribeListResponse(
         Long id,
         String name,
         SubCategory category,
+        String customCategoryTag,
         LocalDateTime date,
         Double price,
-        Currency currency
+        Currency currency,
+        Double convertedPriceKrw
 ) {
-    public static SubscribeListResponse from(Subscribe s) {
+    public static SubscribeListResponse from(Subscribe s, double convertedPriceKrw) {
         return new SubscribeListResponse(
                 s.getId(), s.getName(), s.getSubCategory(),
-                s.getDate(), s.getPrice(), s.getCurrency()
+                s.getCustomCategoryTag(),
+                s.getDate(), s.getPrice(), s.getCurrency(),
+                convertedPriceKrw
         );
     }
 }
