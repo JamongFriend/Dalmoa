@@ -13,13 +13,15 @@ public record SubscribeListResponse(
         String customCategoryTag,
         LocalDateTime date,
         Double price,
-        Currency currency
+        Currency currency,
+        Double convertedPriceKrw
 ) {
-    public static SubscribeListResponse from(Subscribe s) {
+    public static SubscribeListResponse from(Subscribe s, double convertedPriceKrw) {
         return new SubscribeListResponse(
                 s.getId(), s.getName(), s.getSubCategory(),
                 s.getCustomCategoryTag(),
-                s.getDate(), s.getPrice(), s.getCurrency()
+                s.getDate(), s.getPrice(), s.getCurrency(),
+                convertedPriceKrw
         );
     }
 }

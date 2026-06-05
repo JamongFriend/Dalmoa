@@ -72,7 +72,7 @@ public class SubscribeService {
 
     public List<SubscribeListResponse> subscribeList(Long memberId) {
         return subscribeRepository.findAllByMemberId(memberId).stream()
-                .map(SubscribeListResponse::from)
+                .map(s -> SubscribeListResponse.from(s, calculationService.convertToKrw(s)))
                 .toList();
     }
 

@@ -44,7 +44,7 @@ public class CalculationService {
                 ));
     }
 
-    private double convertToKrw(Subscribe s) {
+    public double convertToKrw(Subscribe s) {
         if (s.getCurrency() == Currency.KRW) {
             return s.getPrice();
         }
