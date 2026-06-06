@@ -48,6 +48,7 @@ public class NotificationService {
         }
     }
 
+    // 알림 엔티티 생성 후 DB에 저장
     private void sendNotification(Subscribe subscribe, String message) {
         Notification notification = Notification.builder()
                 .member(subscribe.getMember())
@@ -58,10 +59,12 @@ public class NotificationService {
         log.info("알림 저장 완료: 대상={}, 내용={}", subscribe.getMember().getEmail(), message);
     }
 
+    // 해당 회원의 알림 목록을 최신순으로 조회
     public List<Notification> getMemberNotifications(Long memberId) {
         return notificationRepository.findByMemberIdOrderByIdDesc(memberId);
     }
 
+    // 특정 알림을 읽음 처리
     @Transactional
     public void markAsRead(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
@@ -69,6 +72,7 @@ public class NotificationService {
         notification.markAsRead();
     }
 
+    // 해당 회원의 읽지 않은 알림 존재 여부 확인
     public boolean hasUnreadNotifications(Long memberId) {
         return notificationRepository.existsByMemberIdAndIsReadFalse(memberId);
     }
