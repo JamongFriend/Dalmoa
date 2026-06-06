@@ -37,8 +37,7 @@ public class AuthService {
         String access = jwtTokenProvider.createAccessToken(member.getId(), member.getEmail());
         String refresh = jwtTokenProvider.createRefreshToken(member.getId(), member.getEmail());
 
-        long expDays = request.rememberMe() ? jwtProperties.refreshTokenExpDays() : 1;
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(expDays);
+        LocalDateTime expiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshTokenExpDays());
 
         refreshTokenRepository.deleteByMemberId(member.getId());
         refreshTokenRepository.save(new RefreshToken(member.getId(), refresh, expiresAt));
