@@ -26,6 +26,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtProperties jwtProperties;
 
+    // 로그인
     public TokenResponse login(LoginRequest request) {
         Member member = memberRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
@@ -49,6 +50,7 @@ public class AuthService {
                 .build();
     }
 
+    // refresh 토큰 재발급
     public TokenResponse reissue(ReissueRequest request) {
         if (!jwtTokenProvider.isValid(request.refreshToken())) {
             throw new IllegalArgumentException("RefreshToken이 유효하지 않습니다.");
@@ -77,6 +79,7 @@ public class AuthService {
                 .build();
     }
 
+    // 로그아웃
     @Transactional
     public void logout(Long memberId) {
         refreshTokenRepository.deleteByMemberId(memberId);

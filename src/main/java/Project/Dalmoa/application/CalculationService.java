@@ -30,12 +30,14 @@ public class CalculationService {
         this.baseUrl = baseUrl;
     }
 
+    // 구독 목록 전체 금액을 원화로 합산
     public double totalAmount(List<Subscribe> list) {
         return list.stream()
                 .mapToDouble(this::convertToKrw)
                 .sum();
     }
 
+    // 카테고리별로 구독 금액을 원화로 합산하여 그룹핑
     public Map<SubCategory, Double> calculateGroupedAmount(List<Subscribe> list) {
         return list.stream()
                 .collect(Collectors.groupingBy(
@@ -44,6 +46,7 @@ public class CalculationService {
                 ));
     }
 
+    // 구독 하나의 금액을 원화로 변환 (KRW는 그대로, 외화는 환율 적용)
     public double convertToKrw(Subscribe s) {
         if (s.getCurrency() == Currency.KRW) {
             return s.getPrice();
@@ -52,6 +55,7 @@ public class CalculationService {
         return s.getPrice() * rate;
     }
 
+    // 외부 환율 API에서 해당 통화의 KRW 환율을 조회 (캐시 적용)
     @Cacheable(value = "exchangeRate", key = "#currency")
     public double getExchangeRate(Currency currency) {
         if (currency == Currency.KRW) return 1.0;

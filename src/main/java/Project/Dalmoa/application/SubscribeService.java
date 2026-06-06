@@ -24,6 +24,7 @@ public class SubscribeService {
 
     private final CalculationService calculationService;
 
+    // 구독 생성
     @Transactional
     public Subscribe createSubscribe(SubscribeRequest dto, Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -41,6 +42,7 @@ public class SubscribeService {
         return subscribeRepository.save(subscribe);
     }
 
+    // 구독 수정
     @Transactional
     public Subscribe editSubscribe(SubscribeRequest dto, Long subscribeId) {
         Subscribe subscribe = subscribeRepository.findById(subscribeId)
@@ -58,6 +60,7 @@ public class SubscribeService {
         return subscribe;
     }
 
+    // 구독 삭제
     @Transactional
     public void deleteSubscribe(Long subscribeId, Long memberId) {
         Subscribe subscribe = subscribeRepository.findById(subscribeId)
@@ -70,12 +73,14 @@ public class SubscribeService {
         subscribeRepository.delete(subscribe);
     }
 
+    // 회원의 전체 구독 목록 조회 (원화 환산 금액 포함)
     public List<SubscribeListResponse> subscribeList(Long memberId) {
         return subscribeRepository.findAllByMemberId(memberId).stream()
                 .map(s -> SubscribeListResponse.from(s, calculationService.convertToKrw(s)))
                 .toList();
     }
 
+    // 대시보드 데이터 조회 (전체 지출 합계 및 카테고리별 합계)
     public DashboardResponse getDashboard(Long memberId) {
         List<Subscribe> subscribes = subscribeRepository.findAllByMemberId(memberId);
         double total = calculationService.totalAmount(subscribes);
