@@ -21,12 +21,16 @@ public class MemberService {
 
     @Transactional
     public SignUpResponse SignUp(SignUpRequest request) {
+        if (!request.password().equals(request.confirmPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         validateDuplicateEmail(request.email());
 
         Member member = Member.create(
                 request.email(),
                 request.name(),
-                passwordEncoder.encode(request.password())
+                passwordEncoder.encode(request.password()),
+                request.birthDate()
         );
         memberRepository.save(member);
 
