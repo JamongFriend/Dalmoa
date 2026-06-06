@@ -29,6 +29,7 @@ public class ExchangeRateService {
     @Value("${exchange.api.base-url}")
     private String baseUrl;
 
+    // 외부 API에서 USD 기준 환율을 받아 DB에 저장 또는 업데이트 (스케줄러에서 호출)
     @Transactional
     public void updateExchangeRates() {
         String url = baseUrl + apiKey + "/latest/USD";
@@ -53,6 +54,7 @@ public class ExchangeRateService {
         }
     }
 
+    // DB에 저장된 전체 환율 목록 조회
     public List<ExchangeRate> getAllExchangeRates() {
         return exchangeRateRepository.findAll();
     }

@@ -19,7 +19,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
+    @Transactional // 회원가입
     public SignUpResponse SignUp(SignUpRequest request) {
         if (!request.password().equals(request.confirmPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -40,7 +40,7 @@ public class MemberService {
                 .build();
     }
 
-    @Transactional
+    @Transactional // 회원 정보 수정
     public MemberResponse updateMember(Long memberId, @Valid ProfileUpdateRequest request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
@@ -55,6 +55,7 @@ public class MemberService {
         return MemberResponse.fromEntity(member);
     }
 
+    // 이메일 검증
     private void validateDuplicateEmail(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new IllegalStateException("이미 존재하는 이메일입니다.");
