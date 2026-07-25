@@ -8,6 +8,7 @@ import Project.Dalmoa.presentation.dto.subscribe.response.SubscribeListResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,32 +19,33 @@ import java.util.List;
 public class SubscribeController {
     private final SubscribeService subscribeService;
 
-    @PostMapping("/{memberId}")
+    @PostMapping
     public ResponseEntity<SubscribeDetailResponse> createSubscribe(@Valid @RequestBody SubscribeRequest request,
-                                                                  @PathVariable Long memberId) {
+                                                                  @AuthenticationPrincipal Long memberId) {
         return ResponseEntity.ok(SubscribeDetailResponse.from(subscribeService.createSubscribe(request, memberId)));
     }
 
     @PutMapping("/{subscribeId}")
     public ResponseEntity<SubscribeDetailResponse> editSubscribe(@Valid @RequestBody SubscribeRequest request,
-                                                                @PathVariable Long subscribeId) {
-        return ResponseEntity.ok(SubscribeDetailResponse.from(subscribeService.editSubscribe(request, subscribeId)));
+                                                                @PathVariable Long subscribeId,
+                                                                @AuthenticationPrincipal Long memberId) {
+        return ResponseEntity.ok(SubscribeDetailResponse.from(subscribeService.editSubscribe(request, subscribeId, memberId)));
     }
 
-    @GetMapping("/list/{memberId}")
-    public ResponseEntity<List<SubscribeListResponse>> getList(@PathVariable Long memberId) {
+    @GetMapping("/list")
+    public ResponseEntity<List<SubscribeListResponse>> getList(@AuthenticationPrincipal Long memberId) {
         List<SubscribeListResponse> response = subscribeService.subscribeList(memberId);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{subscribeId}/{memberId}")
-    public ResponseEntity<Void> deleteSubscribe(@PathVariable Long subscribeId, @PathVariable Long memberId) {
+    @DeleteMapping("/{subscribeId}")
+    public ResponseEntity<Void> deleteSubscribe(@PathVariable Long subscribeId, @AuthenticationPrincipal Long memberId) {
         subscribeService.deleteSubscribe(subscribeId, memberId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/dashboard/{memberId}")
-    public ResponseEntity<DashboardResponse> getDashboard(@PathVariable Long memberId) {
+    @GetMapping("/dashboard")
+    public ResponseEntity<DashboardResponse> getDashboard(@AuthenticationPrincipal Long memberId) {
         return ResponseEntity.ok(subscribeService.getDashboard(memberId));
     }
 }
