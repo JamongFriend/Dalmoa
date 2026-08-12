@@ -31,12 +31,15 @@ public class Subscribe {
 
     private String customCategoryTag;
 
+    @Enumerated(EnumType.STRING)
+    private Term term;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    private Subscribe(Long id, Member member, String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customCategoryTag) {
+    private Subscribe(Long id, Member member, String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customCategoryTag, Term term) {
         this.id = id;
         this.member = member;
         this.name = name;
@@ -45,9 +48,10 @@ public class Subscribe {
         this.date = date;
         this.subCategory = subCategory;
         this.customCategoryTag = (subCategory == SubCategory.ETC) ? customCategoryTag : null;
+        this.term = (term == null) ? Term.MONTH : term;
     }
 
-    public static Subscribe createSubscribe(Member member, String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customTypeTag) {
+    public static Subscribe createSubscribe(Member member, String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customTypeTag, Term term) {
         return Subscribe.builder()
                 .member(member)
                 .name(name)
@@ -56,15 +60,17 @@ public class Subscribe {
                 .date(date)
                 .subCategory(subCategory)
                 .customCategoryTag(customTypeTag)
+                .term(term)
                 .build();
     }
 
-    public void editSubscribe(String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customTypeTag) {
+    public void editSubscribe(String name, Double price, Currency currency, LocalDateTime date, SubCategory subCategory, String customTypeTag, Term term) {
         this.name = name;
         this.price = price;
         this.currency = (currency == null) ? Currency.KRW : currency;
         this.date = date;
         this.subCategory = subCategory;
         this.customCategoryTag = (subCategory == SubCategory.ETC) ? customTypeTag : null;
+        this.term = (term == null) ? Term.MONTH : term;
     }
 }
