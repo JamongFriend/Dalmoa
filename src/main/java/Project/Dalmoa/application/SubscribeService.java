@@ -37,7 +37,8 @@ public class SubscribeService {
                 dto.currency(),
                 dto.date().atStartOfDay(),
                 dto.subCategory(),
-                dto.customCategoryTag()
+                dto.customCategoryTag(),
+                dto.term()
         );
         return subscribeRepository.save(subscribe);
     }
@@ -58,7 +59,8 @@ public class SubscribeService {
                 dto.currency(),
                 dto.date().atStartOfDay(),
                 dto.subCategory(),
-                dto.customCategoryTag()
+                dto.customCategoryTag(),
+                dto.term()
         );
 
         return subscribe;
