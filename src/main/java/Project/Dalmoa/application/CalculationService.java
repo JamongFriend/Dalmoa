@@ -3,6 +3,7 @@ package Project.Dalmoa.application;
 import Project.Dalmoa.domain.subscribe.Currency;
 import Project.Dalmoa.domain.subscribe.SubCategory;
 import Project.Dalmoa.domain.subscribe.Subscribe;
+import Project.Dalmoa.domain.subscribe.Term;
 import Project.Dalmoa.presentation.dto.calculation.ExchangeRateResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +48,16 @@ public class CalculationService {
         return list.stream()
                 .collect(Collectors.groupingBy(
                         Subscribe::getSubCategory,
+                        Collectors.summingDouble(s -> monthlyKrwAmount(s, targetMonth))
+                ));
+    }
+
+    // 이번 달 기준, Term(주/월/연)별 월 환산 금액을 원화로 합산하여 그룹핑
+    public Map<Term, Double> calculateGroupedAmountByTerm(List<Subscribe> list) {
+        YearMonth targetMonth = YearMonth.now();
+        return list.stream()
+                .collect(Collectors.groupingBy(
+                        Subscribe::getTerm,
                         Collectors.summingDouble(s -> monthlyKrwAmount(s, targetMonth))
                 ));
     }
