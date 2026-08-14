@@ -11,8 +11,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.List;
+import java.util.Map;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class CalculationServiceTest {
@@ -21,6 +23,62 @@ class CalculationServiceTest {
     @BeforeEach
     void setUp() {
         calculationService = new CalculationService("testApiKey", "http://Test.com/");
+    }
+
+    @Test
+    void totalAmount_여러구독의_합계를_반환() {
+        //given
+        Subscribe monthlySubscribe = Subscribe.createSubscribe(
+                null, "넷플릭스", 17000.0, Currency.KRW,
+                LocalDateTime.of(2026, 8, 1, 0, 0),
+                SubCategory.OTT, null, Term.MONTH
+        );
+        Subscribe yearlySubscribe = Subscribe.createSubscribe(
+                null, "포켓몬 챔피언스 구독", 84000.0, Currency.KRW,
+                LocalDateTime.of(2026, 4, 1, 0, 0),
+                SubCategory.GAME, null, Term.YEAR
+        );
+
+        //when
+        double result = calculationService.totalAmount(List.of(monthlySubscribe, yearlySubscribe));
+
+        //then
+        assertThat(result).isEqualTo(17000.0 + 7000.0);
+    }
+
+    @Test
+    void calculateGroupedAmountByTerm_구독을_Term별로_합산하여_그룹핑() {
+        //given
+        Subscribe monthlySubscribe = Subscribe.createSubscribe(
+                null,
+                "넷플릭스",
+                17000.0,
+                Currency.KRW,
+                LocalDateTime.of(2026, 8, 1, 0, 0),
+                SubCategory.OTT,
+                null,
+                Term.MONTH
+        );
+        Subscribe yearlySubscribe = Subscribe.createSubscribe(
+                null,
+                "포켓몬 챔피언스 구독",
+                84000.0,
+                Currency.KRW,
+                LocalDateTime.of(2026, 4, 1, 0, 0),
+                SubCategory.GAME,
+                null,
+                Term.YEAR
+        );
+
+        //when
+        Map<Term, Double> result = calculationService.calculateGroupedAmountByTerm(
+                List.of(monthlySubscribe, yearlySubscribe)
+        );
+
+        //then
+        assertThat(result)
+                .containsEntry(Term.MONTH, 17000.0)
+                .containsEntry(Term.YEAR, 7000.0);
     }
 
     @Test
@@ -64,6 +122,28 @@ class CalculationServiceTest {
 
         //then
         assertThat(result).isEqualTo(10000.0 * 5);
+    }
+
+    @Test
+    void monthlyKrwAmount_주간_구독은_시작전_달에는_0_반환() {
+        //given
+        Subscribe subscribe = Subscribe.createSubscribe(
+                null,
+                "연말 한정 밀키트",
+                10000.0,
+                Currency.KRW,
+                LocalDateTime.of(2026, 12, 1, 0, 0),   // 구독 시작일이 12월
+                SubCategory.ETC,
+                null,
+                Term.WEEK
+        );
+        YearMonth targetMonth = YearMonth.of(2026, 8);   // 계산하려는 달은 그보다 이전인 8월
+
+        //when
+        double result = calculationService.monthlyKrwAmount(subscribe, targetMonth);
+
+        //then
+        assertThat(result).isEqualTo(0.0);
     }
 
     @Test
