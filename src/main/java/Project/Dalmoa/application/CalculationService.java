@@ -72,6 +72,7 @@ public class CalculationService {
         return base * getExchangeRate(s.getCurrency());
     }
 
+    // 주간 구독, 연간 구독을 월간 구독으로 계산
     private double monthlyBaseAmount(Subscribe s, YearMonth targetMonth) {
         return switch (s.getTerm()) {
             case YEAR -> s.getPrice() / 12.0;
