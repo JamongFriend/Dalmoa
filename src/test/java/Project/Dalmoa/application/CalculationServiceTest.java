@@ -4,10 +4,12 @@ import Project.Dalmoa.domain.subscribe.Currency;
 import Project.Dalmoa.domain.subscribe.SubCategory;
 import Project.Dalmoa.domain.subscribe.Subscribe;
 import Project.Dalmoa.domain.subscribe.Term;
+import Project.Dalmoa.presentation.dto.calculation.ExchangeRateResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -15,14 +17,22 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CalculationServiceTest {
+    private static final String BASE_URL = "http://Test.com/";
+    private static final String API_KEY = "testApiKey";
+
+    private RestClient restClient;
     private CalculationService calculationService;
 
     @BeforeEach
     void setUp() {
-        calculationService = new CalculationService("testApiKey", "http://Test.com/");
+        restClient = mock(RestClient.class, RETURNS_DEEP_STUBS);
+        calculationService = new CalculationService(restClient, API_KEY, BASE_URL);
     }
 
     @Test
@@ -166,5 +176,49 @@ class CalculationServiceTest {
 
         //then
         assertThat(result).isEqualTo((17000.0));
+    }
+
+    @Test
+    void getExchangeRate_외화는_외부API에서_받은_환율을_반환() {
+        //given
+        ExchangeRateResponse response = new ExchangeRateResponse(
+                "success", "USD", Map.of("KRW", 1350.0)
+        );
+        when(restClient.get()
+                .uri(BASE_URL + API_KEY + "/latest/" + Currency.USD.name())
+                .retrieve()
+                .body(ExchangeRateResponse.class)
+        ).thenReturn(response);
+
+        //when
+        double result = calculationService.getExchangeRate(Currency.USD);
+
+        //then
+        assertThat(result).isEqualTo(1350.0);
+    }
+
+    @Test
+    void getExchangeRate_API_실패시_USD는_기본값_1300을_반환() {
+        //given
+        when(restClient.get()
+                .uri(BASE_URL + API_KEY + "/latest/" + Currency.USD.name())
+                .retrieve()
+                .body(ExchangeRateResponse.class)
+        ).thenReturn(null);
+
+        //when
+        double result = calculationService.getExchangeRate(Currency.USD);
+
+        //then
+        assertThat(result).isEqualTo(1300.0);
+    }
+
+    @Test
+    void getExchangeRate_KRW는_API호출없이_1을_반환() {
+        //when
+        double result = calculationService.getExchangeRate(Currency.KRW);
+
+        //then
+        assertThat(result).isEqualTo(1.0);
     }
 }

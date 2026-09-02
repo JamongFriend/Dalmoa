@@ -26,10 +26,11 @@ public class CalculationService {
     private final String baseUrl;
 
     public CalculationService(
+            RestClient restClient,
             @Value("${exchange.api.key}") String apiKey,
             @Value("${exchange.api.base-url}") String baseUrl
     ) {
-        this.restClient = RestClient.create();
+        this.restClient = restClient;
         this.apiKey = apiKey;
         this.baseUrl = baseUrl;
     }
