@@ -3,6 +3,7 @@ package Project.Dalmoa.presentation.dto.subscribe.response;
 import Project.Dalmoa.domain.subscribe.Currency;
 import Project.Dalmoa.domain.subscribe.SubCategory;
 import Project.Dalmoa.domain.subscribe.Subscribe;
+import Project.Dalmoa.domain.subscribe.Term;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ public record SubscribeDetailResponse(
         Currency currency,
         SubCategory category,
         String customTag,
+        Term term,
         LocalDateTime date
 ) {
     public static SubscribeDetailResponse from(Subscribe s) {
@@ -23,6 +25,7 @@ public record SubscribeDetailResponse(
                 s.getCurrency(),
                 s.getSubCategory(),
                 s.getCustomCategoryTag(),
+                s.getTerm(),
                 s.getDate()
         );
     }
