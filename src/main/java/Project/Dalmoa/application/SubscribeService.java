@@ -37,16 +37,21 @@ public class SubscribeService {
                 dto.currency(),
                 dto.date().atStartOfDay(),
                 dto.subCategory(),
-                dto.customCategoryTag()
+                dto.customCategoryTag(),
+                dto.term()
         );
         return subscribeRepository.save(subscribe);
     }
 
     // 구독 수정
     @Transactional
-    public Subscribe editSubscribe(SubscribeRequest dto, Long subscribeId) {
+    public Subscribe editSubscribe(SubscribeRequest dto, Long subscribeId, Long memberId) {
         Subscribe subscribe = subscribeRepository.findById(subscribeId)
                 .orElseThrow(() -> new IllegalArgumentException("구독 없음"));
+
+        if (!subscribe.getMember().getId().equals(memberId)) {
+            throw new IllegalStateException("수정 권한이 없습니다.");
+        }
 
         subscribe.editSubscribe(
                 dto.name(),
@@ -54,7 +59,8 @@ public class SubscribeService {
                 dto.currency(),
                 dto.date().atStartOfDay(),
                 dto.subCategory(),
-                dto.customCategoryTag()
+                dto.customCategoryTag(),
+                dto.term()
         );
 
         return subscribe;
