@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:dalmoa_test;MODE=MySQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.H2Dialect
+
+jwt:
+  secret: Dalmoa_Test_Only_Secret_Key_Minimum_32_Characters_Required_ABCDEF
+  issuer: dalmoa-backend
+  access-token-exp-minutes: 30
+  refresh-token-exp-days: 30
+
+exchange:
+  api:
+    key: test-key
+    base-url: https://v6.exchangerate-api.com/v6/
