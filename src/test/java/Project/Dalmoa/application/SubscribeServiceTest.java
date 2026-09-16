@@ -19,6 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -206,27 +207,52 @@ class SubscribeServiceTest {
     void subscribeList_회원의_구독목록을_원화환산금액과함께_반환() {
         // given
         Long memberId = 1L;
+        YearMonth targetMonth = YearMonth.of(2026, 8);
         Member member = Member.create("test@test.com", "테스터", "encodedPassword", LocalDate.of(1990, 1, 1));
         Subscribe subscribe = Subscribe.createSubscribe(
                 member, "넷플릭스", 17000.0, Currency.KRW,
                 LocalDateTime.of(2026, 8, 1, 0, 0), SubCategory.OTT, null, Term.MONTH
         );
         when(subscribeRepository.findAllByMemberId(memberId)).thenReturn(List.of(subscribe));
+        when(calculationService.isActiveInMonth(subscribe, targetMonth)).thenReturn(true);
         when(calculationService.convertToKrw(subscribe)).thenReturn(17000.0);
+        when(calculationService.monthlyKrwAmount(subscribe, targetMonth)).thenReturn(17000.0);
 
         // when
-        List<SubscribeListResponse> result = subscribeService.subscribeList(memberId);
+        List<SubscribeListResponse> result = subscribeService.subscribeList(memberId, targetMonth);
 
         // then
         assertThat(result).hasSize(1);
         assertThat(result.get(0).name()).isEqualTo("넷플릭스");
         assertThat(result.get(0).convertedPriceKrw()).isEqualTo(17000.0);
+        assertThat(result.get(0).monthlyKrwAmount()).isEqualTo(17000.0);
     }
 
     @Test
-    void getDashboard_전체합계와_카테고리별합계를_반환() {
+    void subscribeList_아직_등록되지않은달의_구독은_제외() {
         // given
         Long memberId = 1L;
+        YearMonth targetMonth = YearMonth.of(2026, 8);
+        Member member = Member.create("test@test.com", "테스터", "encodedPassword", LocalDate.of(1990, 1, 1));
+        Subscribe subscribe = Subscribe.createSubscribe(
+                member, "넷플릭스", 17000.0, Currency.KRW,
+                LocalDateTime.of(2026, 10, 1, 0, 0), SubCategory.OTT, null, Term.MONTH
+        );
+        when(subscribeRepository.findAllByMemberId(memberId)).thenReturn(List.of(subscribe));
+        when(calculationService.isActiveInMonth(subscribe, targetMonth)).thenReturn(false);
+
+        // when
+        List<SubscribeListResponse> result = subscribeService.subscribeList(memberId, targetMonth);
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void getDashboard_전체합계와_전월대비증감과_카테고리별합계를_반환() {
+        // given
+        Long memberId = 1L;
+        YearMonth targetMonth = YearMonth.of(2026, 8);
         Member member = Member.create("test@test.com", "테스터", "encodedPassword", LocalDate.of(1990, 1, 1));
         Subscribe subscribe = Subscribe.createSubscribe(
                 member, "넷플릭스", 17000.0, Currency.KRW,
@@ -234,14 +260,18 @@ class SubscribeServiceTest {
         );
         List<Subscribe> subscribes = List.of(subscribe);
         when(subscribeRepository.findAllByMemberId(memberId)).thenReturn(subscribes);
-        when(calculationService.totalAmount(subscribes)).thenReturn(17000.0);
-        when(calculationService.calculateGroupedAmount(subscribes)).thenReturn(Map.of(SubCategory.OTT, 17000.0));
+        when(calculationService.totalAmount(subscribes, targetMonth)).thenReturn(17000.0);
+        when(calculationService.totalAmount(subscribes, targetMonth.minusMonths(1))).thenReturn(10000.0);
+        when(calculationService.calculateGroupedAmount(subscribes, targetMonth)).thenReturn(Map.of(SubCategory.OTT, 17000.0));
 
         // when
-        DashboardResponse result = subscribeService.getDashboard(memberId);
+        DashboardResponse result = subscribeService.getDashboard(memberId, targetMonth);
 
         // then
         assertThat(result.totalAmount()).isEqualTo(17000.0);
+        assertThat(result.previousTotalAmount()).isEqualTo(10000.0);
+        assertThat(result.diffAmount()).isEqualTo(7000.0);
+        assertThat(result.diffPercent()).isEqualTo(70.0);
         assertThat(result.categorySums()).containsEntry(SubCategory.OTT, 17000.0);
     }
 }

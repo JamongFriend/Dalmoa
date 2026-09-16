@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.YearMonth;
 import java.util.List;
 
 @RestController
@@ -33,8 +34,10 @@ public class SubscribeController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<SubscribeListResponse>> getList(@AuthenticationPrincipal Long memberId) {
-        List<SubscribeListResponse> response = subscribeService.subscribeList(memberId);
+    public ResponseEntity<List<SubscribeListResponse>> getList(@AuthenticationPrincipal Long memberId,
+                                                                 @RequestParam(required = false) Integer year,
+                                                                 @RequestParam(required = false) Integer month) {
+        List<SubscribeListResponse> response = subscribeService.subscribeList(memberId, resolveTargetMonth(year, month));
         return ResponseEntity.ok(response);
     }
 
@@ -45,7 +48,17 @@ public class SubscribeController {
     }
 
     @GetMapping("/dashboard")
-    public ResponseEntity<DashboardResponse> getDashboard(@AuthenticationPrincipal Long memberId) {
-        return ResponseEntity.ok(subscribeService.getDashboard(memberId));
+    public ResponseEntity<DashboardResponse> getDashboard(@AuthenticationPrincipal Long memberId,
+                                                            @RequestParam(required = false) Integer year,
+                                                            @RequestParam(required = false) Integer month) {
+        return ResponseEntity.ok(subscribeService.getDashboard(memberId, resolveTargetMonth(year, month)));
+    }
+
+    // year, month가 둘 다 주어지면 해당 달을, 아니면 이번 달을 기준으로 사용
+    private YearMonth resolveTargetMonth(Integer year, Integer month) {
+        if (year == null || month == null) {
+            return YearMonth.now();
+        }
+        return YearMonth.of(year, month);
     }
 }

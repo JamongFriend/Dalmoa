@@ -179,6 +179,65 @@ class CalculationServiceTest {
     }
 
     @Test
+    void monthlyKrwAmount_월간_구독은_시작전_달에는_0_반환() {
+        //given
+        Subscribe subscribe = Subscribe.createSubscribe(
+                null,
+                "넷플릭스",
+                17000.0,
+                Currency.KRW,
+                LocalDateTime.of(2026, 10, 1, 0, 0),   // 10월에 등록
+                SubCategory.OTT,
+                null,
+                Term.MONTH
+        );
+        YearMonth targetMonth = YearMonth.of(2026, 9);   // 등록 이전 달인 9월
+
+        //when
+        double result = calculationService.monthlyKrwAmount(subscribe, targetMonth);
+
+        //then
+        assertThat(result).isEqualTo(0.0);
+    }
+
+    @Test
+    void monthlyKrwAmount_연간_구독은_시작전_달에는_0_반환() {
+        //given
+        Subscribe subscribe = Subscribe.createSubscribe(
+                null,
+                "포켓몬 챔피언스 구독",
+                84000.0,
+                Currency.KRW,
+                LocalDateTime.of(2026, 10, 1, 0, 0),   // 10월에 등록
+                SubCategory.GAME,
+                null,
+                Term.YEAR
+        );
+        YearMonth targetMonth = YearMonth.of(2026, 9);   // 등록 이전 달인 9월
+
+        //when
+        double result = calculationService.monthlyKrwAmount(subscribe, targetMonth);
+
+        //then
+        assertThat(result).isEqualTo(0.0);
+    }
+
+    @Test
+    void isActiveInMonth_시작월_이후에는_true() {
+        //given
+        Subscribe subscribe = Subscribe.createSubscribe(
+                null, "넷플릭스", 17000.0, Currency.KRW,
+                LocalDateTime.of(2026, 10, 1, 0, 0),
+                SubCategory.OTT, null, Term.MONTH
+        );
+
+        //when & then
+        assertThat(calculationService.isActiveInMonth(subscribe, YearMonth.of(2026, 9))).isFalse();
+        assertThat(calculationService.isActiveInMonth(subscribe, YearMonth.of(2026, 10))).isTrue();
+        assertThat(calculationService.isActiveInMonth(subscribe, YearMonth.of(2026, 11))).isTrue();
+    }
+
+    @Test
     void getExchangeRate_외화는_외부API에서_받은_환율을_반환() {
         //given
         ExchangeRateResponse response = new ExchangeRateResponse(

@@ -15,7 +15,8 @@ public record SubscribeDetailResponse(
         SubCategory category,
         String customTag,
         Term term,
-        LocalDateTime date
+        LocalDateTime date,
+        LocalDateTime registeredAt
 ) {
     public static SubscribeDetailResponse from(Subscribe s) {
         return new SubscribeDetailResponse(
@@ -26,7 +27,8 @@ public record SubscribeDetailResponse(
                 s.getSubCategory(),
                 s.getCustomCategoryTag(),
                 s.getTerm(),
-                s.getDate()
+                s.getDate(),
+                s.getRegisteredAt()
         );
     }
 }

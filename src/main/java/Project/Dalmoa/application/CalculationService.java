@@ -37,7 +37,11 @@ public class CalculationService {
 
     // 이번 달 기준, 구독 목록의 월 환산 총액을 원화로 합산
     public double totalAmount(List<Subscribe> list) {
-        YearMonth targetMonth = YearMonth.now();
+        return totalAmount(list, YearMonth.now());
+    }
+
+    // 특정 달 기준, 구독 목록의 월 환산 총액을 원화로 합산
+    public double totalAmount(List<Subscribe> list, YearMonth targetMonth) {
         return list.stream()
                 .mapToDouble(s -> monthlyKrwAmount(s, targetMonth))
                 .sum();
@@ -45,7 +49,11 @@ public class CalculationService {
 
     // 이번 달 기준, 카테고리별 월 환산 금액을 원화로 합산하여 그룹핑
     public Map<SubCategory, Double> calculateGroupedAmount(List<Subscribe> list) {
-        YearMonth targetMonth = YearMonth.now();
+        return calculateGroupedAmount(list, YearMonth.now());
+    }
+
+    // 특정 달 기준, 카테고리별 월 환산 금액을 원화로 합산하여 그룹핑
+    public Map<SubCategory, Double> calculateGroupedAmount(List<Subscribe> list, YearMonth targetMonth) {
         return list.stream()
                 .collect(Collectors.groupingBy(
                         Subscribe::getSubCategory,
@@ -55,7 +63,11 @@ public class CalculationService {
 
     // 이번 달 기준, Term(주/월/연)별 월 환산 금액을 원화로 합산하여 그룹핑
     public Map<Term, Double> calculateGroupedAmountByTerm(List<Subscribe> list) {
-        YearMonth targetMonth = YearMonth.now();
+        return calculateGroupedAmountByTerm(list, YearMonth.now());
+    }
+
+    // 특정 달 기준, Term(주/월/연)별 월 환산 금액을 원화로 합산하여 그룹핑
+    public Map<Term, Double> calculateGroupedAmountByTerm(List<Subscribe> list, YearMonth targetMonth) {
         return list.stream()
                 .collect(Collectors.groupingBy(
                         Subscribe::getTerm,
@@ -86,11 +98,25 @@ public class CalculationService {
 
     // 주간 구독, 연간 구독을 월간 구독으로 계산
     private double monthlyBaseAmount(Subscribe s, YearMonth targetMonth) {
+        if (isBeforeStartMonth(s, targetMonth)) {
+            return 0.0;
+        }
         return switch (s.getTerm()) {
             case YEAR -> s.getPrice() / 12.0;
             case WEEK -> s.getPrice() * countWeeklyOccurrencesInMonth(s, targetMonth);
             case MONTH -> s.getPrice();
         };
+    }
+
+    // targetMonth가 구독의 결제 시작월(date)보다 이전인지 여부
+    // - 예: 10월에 등록한 구독은 9월 조회 시 포함되면 안 됨
+    private boolean isBeforeStartMonth(Subscribe s, YearMonth targetMonth) {
+        return targetMonth.isBefore(YearMonth.from(s.getDate()));
+    }
+
+    // 해당 구독이 targetMonth 시점에 이미 시작되어 지출 목록에 포함되어야 하는지 여부
+    public boolean isActiveInMonth(Subscribe s, YearMonth targetMonth) {
+        return !isBeforeStartMonth(s, targetMonth);
     }
 
     // 다음 결제일(요일)부터 시작해 7일 간격으로 반복될 때, 해당 월에 결제가 몇 번 발생하는지 계산

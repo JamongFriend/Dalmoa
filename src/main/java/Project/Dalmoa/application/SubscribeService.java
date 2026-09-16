@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
@@ -79,19 +80,28 @@ public class SubscribeService {
         subscribeRepository.delete(subscribe);
     }
 
-    // 회원의 전체 구독 목록 조회 (원화 환산 금액 포함)
-    public List<SubscribeListResponse> subscribeList(Long memberId) {
+    // 특정 달 기준, 회원의 구독 목록 조회 (해당 달에 아직 등록되지 않은 구독은 제외, 원화 환산 금액 포함)
+    public List<SubscribeListResponse> subscribeList(Long memberId, YearMonth targetMonth) {
         return subscribeRepository.findAllByMemberId(memberId).stream()
-                .map(s -> SubscribeListResponse.from(s, calculationService.convertToKrw(s)))
+                .filter(s -> calculationService.isActiveInMonth(s, targetMonth))
+                .map(s -> SubscribeListResponse.from(
+                        s,
+                        calculationService.convertToKrw(s),
+                        calculationService.monthlyKrwAmount(s, targetMonth)
+                ))
                 .toList();
     }
 
-    // 대시보드 데이터 조회 (전체 지출 합계 및 카테고리별 합계)
-    public DashboardResponse getDashboard(Long memberId) {
+    // 특정 달 기준 대시보드 데이터 조회 (지출 합계, 전월 대비 증감, 카테고리별 합계)
+    public DashboardResponse getDashboard(Long memberId, YearMonth targetMonth) {
         List<Subscribe> subscribes = subscribeRepository.findAllByMemberId(memberId);
-        double total = calculationService.totalAmount(subscribes);
-        Map<SubCategory, Double> categorySums = calculationService.calculateGroupedAmount(subscribes);
+        double total = calculationService.totalAmount(subscribes, targetMonth);
+        double previousTotal = calculationService.totalAmount(subscribes, targetMonth.minusMonths(1));
+        Map<SubCategory, Double> categorySums = calculationService.calculateGroupedAmount(subscribes, targetMonth);
 
-        return new DashboardResponse(total, categorySums);
+        double diffAmount = total - previousTotal;
+        double diffPercent = (previousTotal == 0.0) ? 0.0 : (diffAmount / previousTotal) * 100.0;
+
+        return new DashboardResponse(total, previousTotal, diffAmount, diffPercent, categorySums);
     }
 }
