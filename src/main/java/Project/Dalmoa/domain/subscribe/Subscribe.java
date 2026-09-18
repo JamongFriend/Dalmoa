@@ -34,6 +34,9 @@ public class Subscribe {
     @Enumerated(EnumType.STRING)
     private Term term;
 
+    // 구독이 실제로 처음 등록된 시각 (서버에서 생성 시 1회만 세팅, 이후 수정되어도 변하지 않음)
+    private LocalDateTime registeredAt = LocalDateTime.now();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

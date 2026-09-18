@@ -16,15 +16,19 @@ public record SubscribeListResponse(
         Double price,
         Currency currency,
         Term term,
-        Double convertedPriceKrw
+        Double convertedPriceKrw,
+        Double monthlyKrwAmount,
+        LocalDateTime registeredAt
 ) {
-    public static SubscribeListResponse from(Subscribe s, double convertedPriceKrw) {
+    public static SubscribeListResponse from(Subscribe s, double convertedPriceKrw, double monthlyKrwAmount) {
         return new SubscribeListResponse(
                 s.getId(), s.getName(), s.getSubCategory(),
                 s.getCustomCategoryTag(),
                 s.getDate(), s.getPrice(), s.getCurrency(),
                 s.getTerm(),
-                convertedPriceKrw
+                convertedPriceKrw,
+                monthlyKrwAmount,
+                s.getRegisteredAt()
         );
     }
 }
